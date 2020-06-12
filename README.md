@@ -1,2 +1,2 @@
 # TwitterTestApp
-A simple Twitter App to learn its API
+This will be used to learn twwitter's api.
