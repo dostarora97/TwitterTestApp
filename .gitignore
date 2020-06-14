@@ -1,3 +1,11 @@
+#Custom
+auth.json
+data
+.vscode
+Bearer_Token.json
+auth.json
+access.json
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
