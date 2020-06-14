@@ -40,7 +40,7 @@ class Twitter:
             sys.stdout.flush()
 
         with open("data/favs.json", "w", encoding="UTF-8") as file:
-            json.dump(favs, file, indent=4)
+            json.dump(favs, file, indent=4, ensure_ascii=False)
         
         print("{} Favourite Tweets Captured".format(len(favs)))
         return favs
@@ -80,6 +80,7 @@ class Twitter:
                 custom_media_ele["created_at"] = tweet["created_at"]
                 custom_media_ele["type"] = media_ele["type"]
                 custom_media_ele["id"] = media_ele["id_str"]
+                custom_media_ele["tweet_url"] = media_ele["url"]
                 if custom_media_ele["type"] == "video" or custom_media_ele["type"] == "animated_gif":
                     variants = {}
                     for video_variants in media_ele["video_info"]["variants"]:
@@ -136,8 +137,8 @@ else:
 if Path().joinpath("access.json").exists() :
     with open("access.json", "r") as access_file:
         access = json.load(access_file)
-        access_token = access["API_key"]
-        access_token_secret = access["API_secret_key"]
+        access_token = access["access_token"]
+        access_token_secret = access["access_token_secret"]
 else:
     access_token = None
     access_token_secret = None

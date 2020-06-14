@@ -18,7 +18,10 @@
                             <source src="{{ media.url }}" type="video/mp4">
                         </video>
                         <div class="card-footer">
-                            <small class="text-muted">Created At {{ media.created_at }}</small>
+                            <small class="text-muted">
+                                Created At {{ media.created_at }}
+                                <a href="{{ media.tweet_url }}">{{ media.id }}</a>
+                            </small>
                         </div>
                     </div>
                 {% endif %}
