@@ -4,6 +4,12 @@ from pathlib import Path
 import webbrowser
 import tweepy
 import sys
+import subprocess, json, requests
+from pathlib import Path
+import shutil
+import platform
+from tqdm import tqdm
+from zipfile import ZipFile
 
 class Twitter:
     def __init__(self, API_Key, API_secret_key, access_token=None, access_token_secret=None):
@@ -118,8 +124,90 @@ class Twitter:
 
         webbrowser.open("data\\media.html")
 
+    def download_with_aria(self):
+        with open("data/media.json", "r", encoding="UTF-8") as media_file:
+            media_list = json.load(media_file)
+
+        with open("data/download_urls.txt", "w") as dl_file:
+            for media in media_list:
+                dl_file.write("{}\n".format(media["url"]))
+
+        aria_path = str(Path().joinpath("utility\\aria2c.exe").absolute())
+        download_path = str(Path().joinpath("data\\Media_Downloads").absolute())
+        input_urls_path = str(Path().joinpath("data\\download_urls.txt").absolute())
+        result = subprocess.run([aria_path, '-d', download_path, '-i', input_urls_path, '--human-readable'], shell=True)
+        print("All Media downloaded to : {}".format(download_path))
+
+    def download_aria(self):
+        directory = Path().joinpath("utility")
+        if directory.joinpath("aria2c.exe").exists():
+            print("Aria already downloaded.")
+        else:
+            print("Fetching Aria...")
+            dl_url = get_aria_download_url()
+            filename = dl_url.split('/')[-1].split('.zip')[0]
+            print("Latest Release Url: {}".format(dl_url))
+            self.download_zip_file(filename, directory, dl_url)
+
+    def get_aria_download_url(self):
+        current_release_url = requests.get("https://github.com/aria2/aria2/releases/latest").url
+        current_release = current_release_url.split('-')[-1]
+        print("Latest Aria release: {}".format(current_release))
+        base_url = "https://github.com/aria2/aria2/releases/download/release-{}/aria2-{}-".format(current_release, current_release)
+        if platform.system() == "Linux":
+            print("Aria for Linux")
+            platform_url = "aarch64-linux-android-build1.zip"
+
+        if platform.system() == "Windows":
+            if "64" in platform.machine():
+                print("Aria for Windows 64.")
+                platform_url = "win-64bit-build1.zip"
+            else:
+                print("Windows 32.")
+                platform_url = "win-32bit-build1.zip"
+
+        download_url = base_url+platform_url
+        return download_url
+
+    def download_zip_file(self, filename, directory, url):
+        Path(directory).mkdir(parents=True, exist_ok=True)
+        self.download_file(filename, directory, url)
+        self.extract_and_cleanup(directory, filename)
+
+    def download_file(self, filename, directory, url):
+        print("Downloading zip file...")
+        dl_file_path = Path().joinpath(directory).joinpath(filename+".zip").absolute()
+        with requests.get(url, stream=True) as response:
+            total_size = int(response.headers.get('content-length', 0))
+            block_size = 1024
+            progress=tqdm(total=total_size, unit='iB', unit_scale=True, desc="# Downloading ")
+            with open(dl_file_path, 'wb') as file:
+                for data in response.iter_content(block_size):
+                    if data:
+                        progress.update(len(data))
+                        file.write(data)
+            progress.close()
+        print("Downloaded to: {}".format(dl_file_path))
+
+    def extract_and_cleanup(self, directory, filename):
+        target_dir_path = Path(directory).absolute()
+        file_path = Path().joinpath(directory).joinpath(filename+".zip")
+        print("# Extracting to : {}".format(target_dir_path.absolute()))
+        with ZipFile(file_path, 'r') as zip_ref:
+            zip_ref.extractall(target_dir_path)
+        target_dir_path.joinpath(filename).joinpath("aria2c.exe").rename(target_dir_path.joinpath("aria2c.exe"))
+        print("# Deleting redundant files ...")
+        shutil.rmtree(target_dir_path.joinpath(filename))
+        file_path.unlink()
+
+    def download_all(self):
+        self.download_aria()
+        self.download_with_aria()
+
+
 if __name__ ==  "__main__":
 
+    print("### Favourite Tweet Media Download ###")
     print("You need to have Twitter developer keys to use this.")
 
     if Path().joinpath("auth.json").exists() :
@@ -170,3 +258,8 @@ if __name__ ==  "__main__":
     )
 
     print("All the data is saved in Directory: {}".format(Path().joinpath("data").absolute()))
+
+    dl_all = input("Download all media ? [y/n]: ")
+    if dl_all.lower() == "y":
+        print("Starting download...\nThis might take some time.")
+        twpy.download_all()
