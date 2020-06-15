@@ -5,6 +5,7 @@ data
 Bearer_Token.json
 auth.json
 access.json
+utility
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
