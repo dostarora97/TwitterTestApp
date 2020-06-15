@@ -118,47 +118,55 @@ class Twitter:
 
         webbrowser.open("data\\media.html")
 
-if Path().joinpath("auth.json").exists() :
-    with open("auth.json", "r") as auth_file:
-        auth = json.load(auth_file)
-        api_key = auth["API_key"]
-        api_secret_key = auth["API_secret_key"]
-else:
-    api_key = input("API_key : ")
-    api_secret_key = input("API_secret_key : ")
-    
-    later_use = input("Save access credentials later use? [y/n] : ")
-    if (later_use.lower() == "y"):
-        with open("auth.json", "w", encoding="UTF-8") as auth_file:
-            auth = {"API_key" : api_key, "API_secret_key" : api_secret_key}
-            json.dump(auth, auth_file)
-        print("Saved to 'auth.json'. This will be later used to fetch. To revoke access, delete the file 'auth.json'")
+if __name__ ==  "__main__":
 
-if Path().joinpath("access.json").exists() :
-    with open("access.json", "r") as access_file:
-        access = json.load(access_file)
-        access_token = access["access_token"]
-        access_token_secret = access["access_token_secret"]
-else:
-    access_token = None
-    access_token_secret = None
+    print("You need to have Twitter developer keys to use this.")
 
-twpy = Twitter(
-        api_key,
-        api_secret_key,
-        access_token,
-        access_token_secret)
+    if Path().joinpath("auth.json").exists() :
+        with open("auth.json", "r") as auth_file:
+            auth = json.load(auth_file)
+            api_key = auth["API_key"]
+            api_secret_key = auth["API_secret_key"]
+    else:
+        api_key = input("API_key : ")
+        api_secret_key = input("API_secret_key : ")
+        
+        later_use = input("Save access credentials later use? [y/n] : ")
+        if (later_use.lower() == "y"):
+            with open("auth.json", "w", encoding="UTF-8") as auth_file:
+                auth = {"API_key" : api_key, "API_secret_key" : api_secret_key}
+                json.dump(auth, auth_file)
+            print("Saved to 'auth.json'. This will be later used to fetch. To revoke access, delete the file 'auth.json'")
 
-screen_name = input("Enter Screen Name of the user : ")
+    if Path().joinpath("access.json").exists() :
+        with open("access.json", "r") as access_file:
+            access = json.load(access_file)
+            access_token = access["access_token"]
+            access_token_secret = access["access_token_secret"]
+    else:
+        access_token = None
+        access_token_secret = None
+        have_access = input("Do you have access keys ? [y/n]")
+        if have_access.lower() == "y":
+            access_token = input("Access_token : ")
+            access_token = input("Access_token_secret: ")
 
-twpy.visualize(
-    twpy.GET_Media(
-        twpy.GET_MediaTweets(
-            twpy.GET_Favourites(
-                screen_name
+    twpy = Twitter(
+            api_key,
+            api_secret_key,
+            access_token,
+            access_token_secret)
+
+    screen_name = input("Enter Screen Name of the user : ")
+
+    twpy.visualize(
+        twpy.GET_Media(
+            twpy.GET_MediaTweets(
+                twpy.GET_Favourites(
+                    screen_name
+                )
             )
         )
     )
-)
 
-print("All the data is saved in Directory: './data")
+    print("All the data is saved in Directory: {}".format(Path().joinpath("data").absolute()))
