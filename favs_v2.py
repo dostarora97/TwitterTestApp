@@ -144,7 +144,7 @@ class Twitter:
             print("Aria already downloaded.")
         else:
             print("Fetching Aria...")
-            dl_url = get_aria_download_url()
+            dl_url = self.get_aria_download_url()
             filename = dl_url.split('/')[-1].split('.zip')[0]
             print("Latest Release Url: {}".format(dl_url))
             self.download_zip_file(filename, directory, dl_url)
