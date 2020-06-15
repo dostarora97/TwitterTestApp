@@ -2,7 +2,7 @@
 To fetch media from liked/favourited tweets.
 
 You need to have Twitter Developer account. Apply here: https://developer.twitter.com/en/apply-for-access.
-After making a developer account, get access keys from : 
+After making a developer account, get access keys from : https://developer.twitter.com/en/apps
 
 ```
 git clone https://github.com/dostarora97/TwitterTestApp.git
