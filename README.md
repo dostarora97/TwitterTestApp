@@ -6,6 +6,7 @@ After making a developer account, get access keys from : https://developer.twitt
 
 ```
 git clone https://github.com/dostarora97/TwitterTestApp.git
+cd TwitterTestApp
 python -m pip install -r requirements.txt
 python favs_v2.py
 ```
