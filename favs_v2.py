@@ -219,7 +219,7 @@ if __name__ ==  "__main__":
         api_key = input("API_key : ")
         api_secret_key = input("API_secret_key : ")
         
-        later_use = input("Save access credentials later use? [y/n] : ")
+        later_use = input("Save access credentials for later use? [y/n] : ")
         if (later_use.lower() == "y"):
             with open("auth.json", "w", encoding="UTF-8") as auth_file:
                 auth = {"API_key" : api_key, "API_secret_key" : api_secret_key}
@@ -234,7 +234,7 @@ if __name__ ==  "__main__":
     else:
         access_token = None
         access_token_secret = None
-        have_access = input("Do you have access keys ? [y/n]")
+        have_access = input("Do you have access keys ? [y/n] : ")
         if have_access.lower() == "y":
             access_token = input("Access_token : ")
             access_token = input("Access_token_secret: ")
