@@ -1,5 +1,7 @@
 # 1. About
-Get **Favourited Media** from a Twitter Account
+- Scrape **Favourited Media** from a Twitter Account.
+- View them all at glance.
+- Downloads all media using aria.
 
 # 2. Installation
 ## 2.1 Local
