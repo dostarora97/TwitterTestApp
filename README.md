@@ -22,8 +22,8 @@ IPython.display.HTML(filename="data/media.html")
 ```
 
 ## 2.3 Prerequisites
-You need to have Twitter Developer account. Apply [here](https://developer.twitter.com/en/apply-for-access)
-After making a developer account, get access keys for your [app](https://developer.twitter.com/en/apps)
+You need to have Twitter Developer account. Apply [here](https://developer.twitter.com/en/apply-for-access) to make one.  
+After making a developer account, get access keys for your [app](https://developer.twitter.com/en/apps).  
 
 # 3. Note
 All data will be downloaded to `.data` directory.
